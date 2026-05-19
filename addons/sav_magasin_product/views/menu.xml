@@ -1,0 +1,8 @@
+<odoo>
+    <menuitem id="menu_sav_magasin_root" name="SAV Magasin" sequence="5"/>
+    <menuitem id="menu_sav_magasin_referential" name="Référentiel" parent="menu_sav_magasin_root" sequence="80"/>
+    <menuitem id="menu_sav_magasin_brand" name="Marques" parent="menu_sav_magasin_referential" action="action_sav_magasin_product_brand" sequence="10"/>
+    <menuitem id="menu_sav_magasin_range" name="Gammes" parent="menu_sav_magasin_referential" action="action_sav_magasin_product_range" sequence="20"/>
+    <menuitem id="menu_sav_magasin_model" name="Modèles" parent="menu_sav_magasin_referential" action="action_sav_magasin_device_model" sequence="30"/>
+    <menuitem id="menu_sav_magasin_article_type" name="Types articles" parent="menu_sav_magasin_referential" action="action_sav_magasin_article_type" sequence="40"/>
+</odoo>

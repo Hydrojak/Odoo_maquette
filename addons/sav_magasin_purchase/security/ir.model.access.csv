@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sav_magasin_quick_receipt_internal,sav.magasin.quick.receipt internal,model_sav_magasin_quick_receipt,base.group_user,1,1,1,0
+access_sav_magasin_quick_receipt_manager,sav.magasin.quick.receipt manager,model_sav_magasin_quick_receipt,sav_magasin_core.group_sav_magasin_manager,1,1,1,1
+access_sav_magasin_quick_receipt_line_internal,sav.magasin.quick.receipt.line internal,model_sav_magasin_quick_receipt_line,base.group_user,1,1,1,0
+access_sav_magasin_quick_receipt_line_manager,sav.magasin.quick.receipt.line manager,model_sav_magasin_quick_receipt_line,sav_magasin_core.group_sav_magasin_manager,1,1,1,1

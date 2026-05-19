@@ -1,0 +1,35 @@
+<odoo>
+    <record id="action_sav_magasin_sav_part_wait" model="ir.actions.act_window">
+        <field name="name">Dossiers en attente pièce</field>
+        <field name="res_model">sav.magasin.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', '=', 'part_wait')]</field>
+    </record>
+
+    <record id="action_sav_magasin_sav_ready" model="ir.actions.act_window">
+        <field name="name">Dossiers à restituer</field>
+        <field name="res_model">sav.magasin.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', '=', 'ready')]</field>
+    </record>
+
+    <record id="action_sav_magasin_sav_to_invoice" model="ir.actions.act_window">
+        <field name="name">Dossiers à facturer</field>
+        <field name="res_model">sav.magasin.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', '=', 'ready'), ('invoice_id', '=', False)]</field>
+    </record>
+
+    <record id="action_sav_magasin_sav_customer_wait" model="ir.actions.act_window">
+        <field name="name">Dossiers en attente client</field>
+        <field name="res_model">sav.magasin.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', '=', 'customer_wait')]</field>
+    </record>
+
+    <menuitem id="menu_sav_magasin_dashboard" name="Pilotage" parent="sav_magasin_product.menu_sav_magasin_root" sequence="20"/>
+    <menuitem id="menu_sav_magasin_dashboard_part_wait" name="Attente pièce" parent="menu_sav_magasin_dashboard" action="action_sav_magasin_sav_part_wait" sequence="10"/>
+    <menuitem id="menu_sav_magasin_dashboard_ready" name="À restituer" parent="menu_sav_magasin_dashboard" action="action_sav_magasin_sav_ready" sequence="20"/>
+    <menuitem id="menu_sav_magasin_dashboard_to_invoice" name="À facturer" parent="menu_sav_magasin_dashboard" action="action_sav_magasin_sav_to_invoice" sequence="30"/>
+    <menuitem id="menu_sav_magasin_dashboard_customer_wait" name="Attente client" parent="menu_sav_magasin_dashboard" action="action_sav_magasin_sav_customer_wait" sequence="40"/>
+</odoo>

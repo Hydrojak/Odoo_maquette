@@ -1,0 +1,15 @@
+<odoo>
+    <record id="view_sav_magasin_sav_order_form_stock" model="ir.ui.view">
+        <field name="name">sav.magasin.order.form.stock</field>
+        <field name="model">sav.magasin.order</field>
+        <field name="inherit_id" ref="sav_magasin_core.view_sav_magasin_sav_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='part_line_ids']/list/field[@name='quantity']" position="after">
+                <field name="local_available_qty" readonly="1"/>
+                <field name="total_available_qty" readonly="1"/>
+                <field name="availability_state" readonly="1"/>
+                <field name="reserved_for_sav"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sav_magasin_order_internal,sav.magasin.order internal,model_sav_magasin_order,base.group_user,1,1,1,0
+access_sav_magasin_order_manager,sav.magasin.order manager,model_sav_magasin_order,sav_magasin_core.group_sav_magasin_manager,1,1,1,1
+access_sav_magasin_part_line_internal,sav.magasin.part.line internal,model_sav_magasin_part_line,base.group_user,1,1,1,0
+access_sav_magasin_part_line_manager,sav.magasin.part.line manager,model_sav_magasin_part_line,sav_magasin_core.group_sav_magasin_manager,1,1,1,1
+access_sav_magasin_create_wizard_internal,sav.magasin.create.wizard internal,model_sav_magasin_create_wizard,base.group_user,1,1,1,1
+access_sav_magasin_create_wizard_manager,sav.magasin.create.wizard manager,model_sav_magasin_create_wizard,sav_magasin_core.group_sav_magasin_manager,1,1,1,1

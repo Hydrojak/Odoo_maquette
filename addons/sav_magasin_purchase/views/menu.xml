@@ -1,0 +1,4 @@
+<odoo>
+    <menuitem id="menu_sav_magasin_purchase" name="Achats / Réceptions" parent="sav_magasin_product.menu_sav_magasin_root" sequence="40"/>
+    <menuitem id="menu_sav_magasin_quick_receipt" name="Réceptions sans commande" parent="menu_sav_magasin_purchase" action="action_sav_magasin_quick_receipt" sequence="10"/>
+</odoo>

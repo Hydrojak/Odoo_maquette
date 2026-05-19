@@ -1,0 +1,64 @@
+<odoo>
+    <record id="view_sav_magasin_sav_create_wizard_form" model="ir.ui.view">
+        <field name="name">sav.magasin.create.wizard.form</field>
+        <field name="model">sav.magasin.create.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Nouveau dossier SAV">
+                <sheet>
+                    <group string="1. Client">
+                        <group>
+                            <field name="partner_id" invisible="create_partner" context="{'default_customer_rank': 1}"/>
+                            <field name="create_partner"/>
+                            <field name="customer_type" invisible="not create_partner"/>
+                        </group>
+                        <group invisible="not create_partner">
+                            <field name="new_partner_name" required="create_partner"/>
+                            <field name="new_partner_phone"/>
+                            <field name="new_partner_email"/>
+                        </group>
+                    </group>
+                    <group string="2. Produit déposé">
+                        <group>
+                            <field name="device_name" required="1"/>
+                            <field name="brand_id"/>
+                            <field name="range_id"/>
+                            <field name="model_id"/>
+                        </group>
+                        <group>
+                            <field name="serial_number"/>
+                            <field name="warranty_state"/>
+                            <field name="warehouse_id" required="1"/>
+                            <field name="priority"/>
+                            <field name="technician_id"/>
+                        </group>
+                    </group>
+                    <group string="3. Problème et état de dépôt">
+                        <field name="symptom" required="1" placeholder="Problème déclaré par le client..."/>
+                        <group string="Accessoires déposés">
+                            <field name="acc_charger"/>
+                            <field name="acc_cable"/>
+                            <field name="acc_battery"/>
+                            <field name="acc_bag"/>
+                            <field name="acc_other"/>
+                        </group>
+                        <group string="État visuel">
+                            <field name="visual_state" required="1"/>
+                            <field name="visual_state_note" placeholder="Rayures, casse, pièce manquante, traces visibles..."/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_create_sav_order" type="object" string="Valider le dépôt" class="btn-primary"/>
+                    <button string="Annuler" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sav_magasin_sav_create_wizard" model="ir.actions.act_window">
+        <field name="name">Nouveau dossier SAV</field>
+        <field name="res_model">sav.magasin.create.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

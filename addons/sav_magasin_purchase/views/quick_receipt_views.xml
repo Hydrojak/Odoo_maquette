@@ -1,0 +1,66 @@
+<odoo>
+    <record id="view_sav_magasin_quick_receipt_list" model="ir.ui.view">
+        <field name="name">sav.magasin.quick.receipt.list</field>
+        <field name="model">sav.magasin.quick.receipt</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="state"/>
+                <field name="partner_id"/>
+                <field name="warehouse_id"/>
+                <field name="receipt_date"/>
+                <field name="delivery_note"/>
+                <field name="vendor_bill_ref"/>
+                <field name="sav_order_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sav_magasin_quick_receipt_form" model="ir.ui.view">
+        <field name="name">sav.magasin.quick.receipt.form</field>
+        <field name="model">sav.magasin.quick.receipt</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_check" type="object" string="Contrôler" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_validate" type="object" string="Valider" class="btn-primary" invisible="state not in ['draft', 'checked']"/>
+                    <button name="action_cancel" type="object" string="Annuler" invisible="state in ['done', 'cancelled']"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,checked,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="warehouse_id"/>
+                            <field name="receipt_date"/>
+                        </group>
+                        <group>
+                            <field name="delivery_note"/>
+                            <field name="vendor_bill_ref"/>
+                            <field name="sav_order_id"/>
+                        </group>
+                    </group>
+                    <field name="line_ids">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="product_id"/>
+                            <field name="quantity"/>
+                            <field name="price_unit"/>
+                            <field name="location_hint"/>
+                            <field name="note"/>
+                        </list>
+                    </field>
+                    <field name="note"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sav_magasin_quick_receipt" model="ir.actions.act_window">
+        <field name="name">Réceptions sans commande</field>
+        <field name="res_model">sav.magasin.quick.receipt</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
