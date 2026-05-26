@@ -1,0 +1,108 @@
+<odoo>
+    <record id="view_sav_battery_diagnostic_search" model="ir.ui.view">
+        <field name="name">sav.battery.diagnostic.search</field>
+        <field name="model">sav.battery.diagnostic</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="repair_id"/>
+                <field name="checklist_id"/>
+                <field name="checklist_line_id"/>
+                <field name="responsible_id"/>
+                <filter string="Ouverts" name="open" domain="[('state', 'in', ['open', 'in_progress'])]"/>
+                <filter string="Critiques ouverts" name="critical_open" domain="[('is_critical_open', '=', True)]"/>
+                <filter string="Résolus" name="resolved" domain="[('state', '=', 'resolved')]"/>
+                <filter string="Clôturés" name="closed" domain="[('state', '=', 'closed')]"/>
+                <separator string="Grouper par"/>
+                <filter string="État" name="group_state" context="{'group_by': 'state'}"/>
+                <filter string="Gravité" name="group_severity" context="{'group_by': 'severity'}"/>
+                <filter string="Cause" name="group_cause" context="{'group_by': 'cause'}"/>
+                <filter string="Responsable" name="group_responsible" context="{'group_by': 'responsible_id'}"/>
+                <filter string="Dossier" name="group_repair" context="{'group_by': 'repair_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_sav_battery_diagnostic_list" model="ir.ui.view">
+        <field name="name">sav.battery.diagnostic.list</field>
+        <field name="model">sav.battery.diagnostic</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="is_critical_open" decoration-warning="state in ['open', 'in_progress']" decoration-success="state in ['resolved', 'closed']">
+                <field name="name"/>
+                <field name="repair_id"/>
+                <field name="checklist_line_id"/>
+                <field name="severity"/>
+                <field name="cause"/>
+                <field name="state"/>
+                <field name="responsible_id"/>
+                <field name="date_opened"/>
+                <field name="date_closed"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sav_battery_diagnostic_form" model="ir.ui.view">
+        <field name="name">sav.battery.diagnostic.form</field>
+        <field name="model">sav.battery.diagnostic</field>
+        <field name="arch" type="xml">
+            <form string="Diagnostic batterie">
+                <header>
+                    <button name="action_start" type="object" string="Démarrer traitement" class="btn-primary" invisible="state != 'open'"/>
+                    <button name="action_resolve" type="object" string="Marquer résolu" class="btn-primary" invisible="state not in ['open', 'in_progress']"/>
+                    <button name="action_reject" type="object" string="Rejeter" invisible="state not in ['open', 'in_progress']"/>
+                    <button name="action_close" type="object" string="Clôturer" invisible="state not in ['resolved', 'rejected']"/>
+                    <button name="action_reopen" type="object" string="Réouvrir" invisible="state not in ['resolved', 'rejected', 'closed']"/>
+                    <field name="state" widget="statusbar" statusbar_visible="open,in_progress,resolved,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Origine">
+                            <field name="repair_id"/>
+                            <field name="checklist_id"/>
+                            <field name="checklist_line_id"/>
+                            <field name="checklist_line_phase" readonly="1"/>
+                            <field name="checklist_line_verdict" readonly="1"/>
+                        </group>
+                        <group string="Traitement">
+                            <field name="severity"/>
+                            <field name="cause"/>
+                            <field name="responsible_id"/>
+                            <field name="date_opened" readonly="1"/>
+                            <field name="date_closed" readonly="1"/>
+                            <field name="is_critical_open" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Description de l’écart">
+                        <field name="description" placeholder="Décrire l’écart, la mesure hors seuil, le symptôme ou le défaut constaté..."/>
+                    </group>
+                    <group string="Action corrective">
+                        <field name="corrective_action" placeholder="Action réalisée ou prévue pour lever la non-conformité..."/>
+                        <field name="resolution_note" placeholder="Note de résolution, justification de rejet ou commentaire qualité..."/>
+                    </group>
+                    <group string="Preuves">
+                        <field name="photo_ids" widget="many2many_binary"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sav_battery_diagnostic" model="ir.actions.act_window">
+        <field name="name">Diagnostics batterie</field>
+        <field name="res_model">sav.battery.diagnostic</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_open': 1}</field>
+    </record>
+
+    <record id="action_sav_battery_diagnostic_critical_open" model="ir.actions.act_window">
+        <field name="name">Diagnostics critiques ouverts</field>
+        <field name="res_model">sav.battery.diagnostic</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_critical_open', '=', True)]</field>
+        <field name="context">{'search_default_critical_open': 1}</field>
+    </record>
+</odoo>

@@ -1,0 +1,8 @@
+<odoo>
+    <menuitem id="menu_sav_magasin_purchase" name="Achats / Réceptions" parent="sav_magasin_product.menu_sav_magasin_root" sequence="40"/>
+    <menuitem id="menu_sav_magasin_purchase_orders" name="Commandes fournisseur batterie" parent="menu_sav_magasin_purchase" action="action_sav_magasin_purchase_order" sequence="5"/>
+    <menuitem id="menu_sav_magasin_purchase_needed" name="Composants batterie à commander" parent="menu_sav_magasin_purchase" action="sav_magasin_stock.action_sav_magasin_part_line_purchase_needed" sequence="10"/>
+    <menuitem id="menu_sav_magasin_purchase_ordered" name="Composants batterie commandées" parent="menu_sav_magasin_purchase" action="action_sav_magasin_part_line_purchase_ordered" sequence="15"/>
+    <menuitem id="menu_sav_magasin_purchase_received" name="Composants batterie reçues" parent="menu_sav_magasin_purchase" action="action_sav_magasin_part_line_received" sequence="20"/>
+    <menuitem id="menu_sav_magasin_quick_receipt" name="Réceptions sans commande" parent="menu_sav_magasin_purchase" action="action_sav_magasin_quick_receipt" sequence="30"/>
+</odoo>

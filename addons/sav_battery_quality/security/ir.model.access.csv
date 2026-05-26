@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sav_battery_model_user,sav.battery.model user,model_sav_battery_model,base.group_user,1,1,1,0
+access_sav_battery_checklist_template_user,sav.battery.checklist.template user,model_sav_battery_checklist_template,base.group_user,1,1,1,0
+access_sav_battery_checklist_template_line_user,sav.battery.checklist.template.line user,model_sav_battery_checklist_template_line,base.group_user,1,1,1,0
+access_sav_battery_checklist_user,sav.battery.checklist user,model_sav_battery_checklist,base.group_user,1,1,1,0
+access_sav_battery_checklist_line_user,sav.battery.checklist.line user,model_sav_battery_checklist_line,base.group_user,1,1,1,0
+access_sav_battery_diagnostic_user,sav.battery.diagnostic user,model_sav_battery_diagnostic,base.group_user,1,1,1,0
+access_sav_battery_test_session_user,sav.battery.test.session user,model_sav_battery_test_session,base.group_user,1,1,1,0
+access_sav_battery_test_measurement_user,sav.battery.test.measurement user,model_sav_battery_test_measurement,base.group_user,1,1,1,0

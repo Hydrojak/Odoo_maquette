@@ -1,0 +1,14 @@
+<odoo>
+    <record id="view_sav_magasin_order_form_knowledge" model="ir.ui.view">
+        <field name="name">sav.magasin.order.form.knowledge</field>
+        <field name="model">sav.magasin.order</field>
+        <field name="inherit_id" ref="sav_magasin_core.view_sav_magasin_sav_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_contextual_procedures" type="object" class="oe_stat_button" icon="fa-book">
+                    <field name="help_procedure_count" widget="statinfo" string="Procédures"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

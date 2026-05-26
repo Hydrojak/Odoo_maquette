@@ -1,0 +1,281 @@
+<odoo>
+    <record id="view_sav_battery_checklist_template_list" model="ir.ui.view">
+        <field name="name">sav.battery.checklist.template.list</field>
+        <field name="model">sav.battery.checklist.template</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="version"/>
+                <field name="line_count"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sav_battery_checklist_template_form" model="ir.ui.view">
+        <field name="name">sav.battery.checklist.template.form</field>
+        <field name="model">sav.battery.checklist.template</field>
+        <field name="arch" type="xml">
+            <form string="Modèle checklist batterie">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="version"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                            <field name="line_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <field name="description" placeholder="Objectif et périmètre de ce modèle de checklist..."/>
+                    <field name="line_ids">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="phase"/>
+                            <field name="name"/>
+                            <field name="measurement_type"/>
+                            <field name="expected_criteria"/>
+                            <field name="unit"/>
+                            <field name="use_min_value"/>
+                            <field name="min_value"/>
+                            <field name="use_max_value"/>
+                            <field name="max_value"/>
+                            <field name="required"/>
+                            <field name="blocking"/>
+                            <field name="requires_photo_on_fail"/>
+                        </list>
+                        <form string="Contrôle modèle">
+                            <sheet>
+                                <group>
+                                    <group>
+                                        <field name="sequence"/>
+                                        <field name="phase"/>
+                                        <field name="name"/>
+                                        <field name="measurement_type"/>
+                                    </group>
+                                    <group>
+                                        <field name="required"/>
+                                        <field name="blocking"/>
+                                        <field name="requires_photo_on_fail"/>
+                                    </group>
+                                </group>
+                                <group string="Critères">
+                                    <field name="expected_criteria"/>
+                                    <field name="unit"/>
+                                    <field name="use_min_value"/>
+                                    <field name="min_value" invisible="not use_min_value"/>
+                                    <field name="use_max_value"/>
+                                    <field name="max_value" invisible="not use_max_value"/>
+                                </group>
+                                <field name="note" placeholder="Instruction atelier, méthode de mesure, version notice attendue..."/>
+                            </sheet>
+                        </form>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sav_battery_checklist_template" model="ir.actions.act_window">
+        <field name="name">Modèles checklist batterie</field>
+        <field name="res_model">sav.battery.checklist.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_sav_battery_checklist_search" model="ir.ui.view">
+        <field name="name">sav.battery.checklist.search</field>
+        <field name="model">sav.battery.checklist</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="repair_id"/>
+                <field name="template_id"/>
+                <field name="operator_id"/>
+                <filter string="En cours" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
+                <filter string="À corriger" name="to_correct" domain="[('state', '=', 'to_correct')]"/>
+                <filter string="Validées" name="validated" domain="[('state', 'in', ['validated', 'locked'])]"/>
+                <filter string="Non-conformités" name="with_fail" domain="[('fail_count', '&gt;', 0)]"/>
+                <filter string="Bloquantes" name="with_blocking_fail" domain="[('blocking_fail_count', '&gt;', 0)]"/>
+                <separator string="Grouper par"/>
+                <filter string="Statut" name="group_state" context="{'group_by': 'state'}"/>
+                <filter string="Technicien" name="group_operator" context="{'group_by': 'operator_id'}"/>
+                <filter string="Modèle" name="group_template" context="{'group_by': 'template_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_sav_battery_checklist_list" model="ir.ui.view">
+        <field name="name">sav.battery.checklist.list</field>
+        <field name="model">sav.battery.checklist</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="blocking_fail_count &gt; 0" decoration-warning="state == 'to_correct'" decoration-success="state in ['validated', 'locked']">
+                <field name="name"/>
+                <field name="repair_id"/>
+                <field name="state"/>
+                <field name="operator_id"/>
+                <field name="completion_rate"/>
+                <field name="completed_required_count"/>
+                <field name="required_count"/>
+                <field name="pass_count"/>
+                <field name="fail_count"/>
+                <field name="blocking_fail_count"/>
+                <field name="critical_photo_missing_count"/>
+                <field name="open_diagnostic_count"/>
+                <field name="open_critical_diagnostic_count"/>
+                <field name="start_datetime"/>
+                <field name="end_datetime"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sav_battery_checklist_line_list" model="ir.ui.view">
+        <field name="name">sav.battery.checklist.line.list</field>
+        <field name="model">sav.battery.checklist.line</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="verdict == 'fail'" decoration-success="verdict == 'pass'" decoration-muted="verdict == 'na'">
+                <field name="repair_id"/>
+                <field name="checklist_id"/>
+                <field name="phase"/>
+                <field name="name"/>
+                <field name="measurement_type"/>
+                <field name="is_measurement_entered"/>
+                <field name="measured_value"/>
+                <field name="unit"/>
+                <field name="verdict"/>
+                <field name="required"/>
+                <field name="blocking"/>
+                <field name="is_complete"/>
+                <field name="diagnostic_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_sav_battery_checklist_line" model="ir.actions.act_window">
+        <field name="name">Contrôles batterie</field>
+        <field name="res_model">sav.battery.checklist.line</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_sav_battery_checklist_form" model="ir.ui.view">
+        <field name="name">sav.battery.checklist.form</field>
+        <field name="model">sav.battery.checklist</field>
+        <field name="arch" type="xml">
+            <form string="Checklist batterie">
+                <header>
+                    <button name="action_validate" type="object" string="Valider checklist" class="btn-primary" invisible="state not in ['draft', 'in_progress', 'to_correct']"/>
+                    <button name="action_lock" type="object" string="Verrouiller" invisible="state != 'validated'"/>
+                    <button name="action_reset_to_progress" type="object" string="Réouvrir" invisible="state not in ['to_correct', 'validated']"/>
+                    <button name="action_cancel" type="object" string="Annuler" invisible="state in ['locked', 'cancelled']"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,to_correct,validated,locked"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Dossier">
+                            <field name="repair_id"/>
+                            <field name="template_id"/>
+                            <field name="template_version" readonly="1"/>
+                        </group>
+                        <group string="Suivi">
+                            <field name="operator_id"/>
+                            <field name="quality_responsible_id"/>
+                            <field name="start_datetime"/>
+                            <field name="end_datetime" readonly="1"/>
+                            <field name="locked_datetime" readonly="1" invisible="not locked_datetime"/>
+                        </group>
+                    </group>
+                    <group string="Synthèse">
+                        <field name="completion_rate" readonly="1"/>
+                        <field name="completed_required_count" readonly="1"/>
+                        <field name="required_count" readonly="1"/>
+                        <field name="pass_count" readonly="1"/>
+                        <field name="fail_count" readonly="1"/>
+                        <field name="na_count" readonly="1"/>
+                        <field name="pending_count" readonly="1"/>
+                        <field name="blocking_fail_count" readonly="1"/>
+                        <field name="critical_photo_missing_count" readonly="1"/>
+                        <field name="diagnostic_count" readonly="1"/>
+                        <field name="open_diagnostic_count" readonly="1"/>
+                        <field name="open_critical_diagnostic_count" readonly="1"/>
+                    </group>
+                    <field name="validation_message" readonly="1" invisible="not validation_message" class="text-danger"/>
+                    <field name="line_ids" readonly="state == 'locked'">
+                        <list editable="bottom" decoration-danger="verdict == 'fail'" decoration-success="verdict == 'pass'" decoration-muted="verdict == 'na'">
+                            <field name="sequence" widget="handle"/>
+                            <field name="phase"/>
+                            <field name="name"/>
+                            <field name="measurement_type"/>
+                            <field name="is_measurement_entered" invisible="measurement_type != 'numeric'"/>
+                            <field name="measured_value" invisible="measurement_type != 'numeric'"/>
+                            <field name="measured_text" invisible="measurement_type != 'text'"/>
+                            <field name="unit"/>
+                            <field name="use_min_value"/>
+                            <field name="min_value" invisible="not use_min_value"/>
+                            <field name="use_max_value"/>
+                            <field name="max_value" invisible="not use_max_value"/>
+                            <field name="verdict"/>
+                            <field name="required"/>
+                            <field name="blocking"/>
+                            <field name="requires_photo_on_fail"/>
+                            <field name="is_complete" readonly="1"/>
+                            <field name="diagnostic_count" readonly="1"/>
+                            <field name="comment"/>
+                        </list>
+                        <form string="Contrôle batterie">
+                            <header>
+                                <button name="action_create_diagnostic" type="object" string="Créer / ouvrir diagnostic" class="btn-primary" invisible="verdict != 'fail'"/>
+                                <button name="action_open_diagnostics" type="object" string="Diagnostics" invisible="diagnostic_count == 0"/>
+                            </header>
+                            <sheet>
+                                <group>
+                                    <group>
+                                        <field name="phase"/>
+                                        <field name="name"/>
+                                        <field name="expected_criteria"/>
+                                        <field name="instruction"/>
+                                    </group>
+                                    <group>
+                                        <field name="required"/>
+                                        <field name="blocking"/>
+                                        <field name="requires_photo_on_fail"/>
+                                        <field name="is_complete" readonly="1"/>
+                                        <field name="diagnostic_count" readonly="1"/>
+                                    </group>
+                                </group>
+                                <group string="Mesure et verdict">
+                                    <field name="measurement_type"/>
+                                    <field name="is_measurement_entered" invisible="measurement_type != 'numeric'"/>
+                                    <field name="measured_value" invisible="measurement_type != 'numeric'"/>
+                                    <field name="measured_text" invisible="measurement_type != 'text'"/>
+                                    <field name="unit"/>
+                                    <field name="use_min_value"/>
+                                    <field name="min_value" invisible="not use_min_value"/>
+                                    <field name="use_max_value"/>
+                                    <field name="max_value" invisible="not use_max_value"/>
+                                    <field name="is_out_of_range" readonly="1" invisible="measurement_type != 'numeric'"/>
+                                    <field name="verdict"/>
+                                </group>
+                                <field name="comment" placeholder="Commentaire obligatoire si non conforme..."/>
+                                <field name="proof_attachment_ids" widget="many2many_binary"/>
+                            </sheet>
+                        </form>
+                    </field>
+                    <field name="comment" placeholder="Commentaire général de validation..."/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sav_battery_checklist" model="ir.actions.act_window">
+        <field name="name">Checklists qualité batterie</field>
+        <field name="res_model">sav.battery.checklist</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_in_progress': 1}</field>
+    </record>
+</odoo>

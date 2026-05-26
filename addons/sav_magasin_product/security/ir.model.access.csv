@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sav_magasin_product_brand_user,sav.magasin.product.brand user,model_sav_magasin_product_brand,base.group_user,1,1,1,0
+access_sav_magasin_product_range_user,sav.magasin.product.range user,model_sav_magasin_product_range,base.group_user,1,1,1,0
+access_sav_magasin_device_model_user,sav.magasin.device.model user,model_sav_magasin_device_model,base.group_user,1,1,1,0
+access_sav_magasin_article_type_user,sav.magasin.article.type user,model_sav_magasin_article_type,base.group_user,1,1,1,0

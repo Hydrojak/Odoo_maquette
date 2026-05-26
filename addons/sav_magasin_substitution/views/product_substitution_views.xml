@@ -1,0 +1,82 @@
+<odoo>
+    <record id="view_sav_magasin_product_substitution_search" model="ir.ui.view">
+        <field name="name">sav.magasin.product.substitution.search</field>
+        <field name="model">sav.magasin.product.substitution</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="original_product_id"/>
+                <field name="substitute_product_id"/>
+                <filter string="Actifs" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Validés" name="validated" domain="[('validation_state', '=', 'validated')]"/>
+                <filter string="À tester" name="to_test" domain="[('validation_state', '=', 'to_test')]"/>
+                <filter string="Validation responsable" name="restricted" domain="[('validation_state', '=', 'restricted')]"/>
+                <separator string="Grouper par"/>
+                <filter string="Article d'origine" name="group_original" context="{'group_by': 'original_product_id'}"/>
+                <filter string="Type" name="group_type" context="{'group_by': 'substitution_type'}"/>
+                <filter string="Validation" name="group_validation" context="{'group_by': 'validation_state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_sav_magasin_product_substitution_list" model="ir.ui.view">
+        <field name="name">sav.magasin.product.substitution.list</field>
+        <field name="model">sav.magasin.product.substitution</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="validation_state == 'forbidden'" decoration-warning="validation_state in ['to_test', 'restricted']" decoration-success="validation_state == 'validated'">
+                <field name="sequence" widget="handle"/>
+                <field name="active"/>
+                <field name="original_product_id"/>
+                <field name="substitute_product_id"/>
+                <field name="substitution_type"/>
+                <field name="validation_state"/>
+                <field name="priority"/>
+                <field name="substitute_available_qty"/>
+                <field name="warranty_impact"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sav_magasin_product_substitution_form" model="ir.ui.view">
+        <field name="name">sav.magasin.product.substitution.form</field>
+        <field name="model">sav.magasin.product.substitution</field>
+        <field name="arch" type="xml">
+            <form string="Substitution composant batterie">
+                <header>
+                    <button name="action_disable" type="object" string="Désactiver" invisible="not active"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Articles">
+                            <field name="active"/>
+                            <field name="original_product_id"/>
+                            <field name="substitute_product_id"/>
+                            <field name="substitute_available_qty" readonly="1"/>
+                        </group>
+                        <group string="Règles métier">
+                            <field name="substitution_type"/>
+                            <field name="validation_state"/>
+                            <field name="priority"/>
+                            <field name="price_policy"/>
+                            <field name="warranty_impact"/>
+                        </group>
+                    </group>
+                    <group string="Note technique">
+                        <field name="technical_note" placeholder="Compatibilité, réserve de montage, impact qualité, validation responsable..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sav_magasin_product_substitution" model="ir.actions.act_window">
+        <field name="name">Substitutions articles</field>
+        <field name="res_model">sav.magasin.product.substitution</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+    </record>
+
+
+</odoo>

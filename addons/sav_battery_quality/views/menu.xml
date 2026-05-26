@@ -1,0 +1,67 @@
+<odoo>
+    <menuitem id="menu_rewatt_battery_workshop"
+              name="Réparation batteries"
+              parent="sav_magasin_product.menu_sav_magasin_root"
+              sequence="2"/>
+
+    <menuitem id="menu_rewatt_battery_orders"
+              name="Dossiers batteries"
+              parent="menu_rewatt_battery_workshop"
+              action="action_rewatt_battery_orders"
+              sequence="10"/>
+
+    <menuitem id="menu_rewatt_battery_checklists"
+              name="Checklists qualité"
+              parent="menu_rewatt_battery_workshop"
+              action="action_sav_battery_checklist"
+              sequence="20"/>
+
+
+    <menuitem id="menu_rewatt_battery_diagnostics"
+              name="Diagnostics batterie"
+              parent="menu_rewatt_battery_workshop"
+              action="action_sav_battery_diagnostic"
+              sequence="25"/>
+
+    <menuitem id="menu_rewatt_battery_diagnostics_critical"
+              name="Diagnostics critiques ouverts"
+              parent="menu_rewatt_battery_workshop"
+              action="action_sav_battery_diagnostic_critical_open"
+              sequence="26"/>
+
+
+    <menuitem id="menu_rewatt_battery_tests"
+              name="Tests charge/décharge"
+              parent="menu_rewatt_battery_workshop"
+              action="action_sav_battery_test_session"
+              sequence="27"/>
+
+    <menuitem id="menu_rewatt_battery_tests_failed"
+              name="Tests non conformes"
+              parent="menu_rewatt_battery_workshop"
+              action="action_sav_battery_test_session_failed"
+              sequence="28"/>
+
+    <menuitem id="menu_rewatt_battery_blocked"
+              name="Batteries bloquées"
+              parent="menu_rewatt_battery_workshop"
+              action="action_rewatt_battery_blocked"
+              sequence="30"/>
+
+    <menuitem id="menu_rewatt_battery_referential"
+              name="Référentiel batterie"
+              parent="sav_magasin_product.menu_sav_magasin_referential"
+              sequence="5"/>
+
+    <menuitem id="menu_rewatt_battery_models"
+              name="Modèles batteries"
+              parent="menu_rewatt_battery_referential"
+              action="action_sav_battery_model"
+              sequence="10"/>
+
+    <menuitem id="menu_rewatt_battery_checklist_templates"
+              name="Modèles checklists"
+              parent="menu_rewatt_battery_referential"
+              action="action_sav_battery_checklist_template"
+              sequence="20"/>
+</odoo>

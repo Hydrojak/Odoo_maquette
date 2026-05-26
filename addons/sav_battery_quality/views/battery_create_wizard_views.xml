@@ -1,0 +1,22 @@
+<odoo>
+    <record id="view_sav_magasin_create_wizard_form_battery" model="ir.ui.view">
+        <field name="name">sav.magasin.create.wizard.form.battery</field>
+        <field name="model">sav.magasin.create.wizard</field>
+        <field name="inherit_id" ref="sav_magasin_core.view_sav_magasin_sav_create_wizard_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='warranty_state']" position="after">
+                <field name="battery_model_id"/>
+                <field name="battery_serial"/>
+                <field name="battery_nominal_voltage" required="1"/>
+                <field name="battery_max_voltage" required="1"/>
+                <field name="battery_capacity_ah" required="1"/>
+                <field name="battery_chemistry" required="1"/>
+                <field name="battery_series_count"/>
+                <field name="battery_parallel_count"/>
+                <field name="bms_type"/>
+                <field name="connector_type"/>
+                <field name="charger_voltage"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,129 @@
+<odoo>
+    <record id="view_sav_magasin_procedure_search" model="ir.ui.view">
+        <field name="name">sav.magasin.procedure.search</field>
+        <field name="model">sav.magasin.procedure</field>
+        <field name="arch" type="xml">
+            <search string="Procédures atelier batterie">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="category"/>
+                <field name="role"/>
+                <field name="applicable_state"/>
+                <filter string="Actives" name="active" domain="[('active', '=', True)]"/>
+                <separator string="Grouper par"/>
+                <group>
+                    <filter string="Catégorie" name="group_category" context="{'group_by': 'category'}"/>
+                    <filter string="Profil" name="group_role" context="{'group_by': 'role'}"/>
+                    <filter string="Statut dossier" name="group_state" context="{'group_by': 'applicable_state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_sav_magasin_procedure_list" model="ir.ui.view">
+        <field name="name">sav.magasin.procedure.list</field>
+        <field name="model">sav.magasin.procedure</field>
+        <field name="arch" type="xml">
+            <list string="Procédures atelier batterie">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="category"/>
+                <field name="role"/>
+                <field name="applicable_state"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sav_magasin_procedure_form" model="ir.ui.view">
+        <field name="name">sav.magasin.procedure.form</field>
+        <field name="model">sav.magasin.procedure</field>
+        <field name="arch" type="xml">
+            <form string="Procédure atelier batterie">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Nom de la procédure"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="category"/>
+                            <field name="role"/>
+                        </group>
+                        <group>
+                            <field name="applicable_state"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Résumé">
+                            <field name="summary" placeholder="Résumé opérationnel..."/>
+                            <field name="content" widget="html" placeholder="Procédure détaillée..."/>
+                        </page>
+                        <page string="Étapes">
+                            <field name="step_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="description"/>
+                                    <field name="expected_result"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Risques / questions">
+                            <field name="risk_note" placeholder="Risques métier, erreurs fréquentes, points de vigilance..."/>
+                            <field name="question_note" placeholder="Questions à confirmer avec les utilisateurs métier..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sav_magasin_procedures" model="ir.actions.act_window">
+        <field name="name">Procédures métier</field>
+        <field name="res_model">sav.magasin.procedure</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+    </record>
+
+    <record id="view_sav_magasin_faq_list" model="ir.ui.view">
+        <field name="name">sav.magasin.faq.list</field>
+        <field name="model">sav.magasin.faq</field>
+        <field name="arch" type="xml">
+            <list string="FAQ atelier batterie">
+                <field name="sequence" widget="handle"/>
+                <field name="question"/>
+                <field name="category"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sav_magasin_faq_form" model="ir.ui.view">
+        <field name="name">sav.magasin.faq.form</field>
+        <field name="model">sav.magasin.faq</field>
+        <field name="arch" type="xml">
+            <form string="FAQ atelier batterie">
+                <sheet>
+                    <group>
+                        <field name="question"/>
+                        <field name="category"/>
+                        <field name="sequence"/>
+                        <field name="active"/>
+                    </group>
+                    <field name="answer" widget="html"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sav_magasin_faq" model="ir.actions.act_window">
+        <field name="name">FAQ métier</field>
+        <field name="res_model">sav.magasin.faq</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

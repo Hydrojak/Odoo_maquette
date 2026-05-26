@@ -1,0 +1,139 @@
+<odoo>
+    <record id="view_sav_magasin_sav_order_form_stock" model="ir.ui.view">
+        <field name="name">sav.magasin.order.form.stock</field>
+        <field name="model">sav.magasin.order</field>
+        <field name="inherit_id" ref="sav_magasin_core.view_sav_magasin_sav_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='part_line_ids']/list/field[@name='quantity']" position="after">
+                <field name="local_available_qty" readonly="1"/>
+                <field name="remote_available_qty" readonly="1"/>
+                <field name="total_available_qty" readonly="1"/>
+                <field name="availability_state" readonly="1"/>
+                <field name="source_warehouse_id" readonly="1"/>
+                <field name="stock_action_required" readonly="1"/>
+                <field name="reserved_for_sav"/>
+                <field name="stock_decision_note" readonly="1"/>
+            </xpath>
+            <xpath expr="//field[@name='part_line_ids']/list/field[@name='note']" position="after">
+                <button name="action_check_stock" type="object" string="Vérifier"/>
+                <button name="action_mark_reserved" type="object" string="Réserver" invisible="availability_state != 'available_local'"/>
+                <button name="action_request_transfer" type="object" string="Transfert" invisible="availability_state != 'available_remote'"/>
+                <button name="action_request_purchase" type="object" string="Commander" invisible="availability_state == 'available_local'"/>
+                <button name="action_mark_consumed" type="object" string="Consommer" invisible="state == 'consumed'"/>
+                <button name="action_unreserve" type="object" string="Annuler résa" invisible="not reserved_for_sav"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sav_magasin_part_line_search" model="ir.ui.view">
+        <field name="name">sav.magasin.part.line.search</field>
+        <field name="model">sav.magasin.part.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="order_id"/>
+                <field name="product_id"/>
+                <filter string="À vérifier" name="to_check" domain="[('state', '=', 'to_check')]"/>
+                <filter string="Réservées" name="reserved" domain="[('state', '=', 'reserved')]"/>
+                <filter string="Transfert demandé" name="transfer_requested" domain="[('state', '=', 'transfer_requested')]"/>
+                <filter string="Commande à prévoir" name="purchase_needed" domain="[('state', '=', 'purchase_needed')]"/>
+                <filter string="Consommées" name="consumed" domain="[('state', '=', 'consumed')]"/>
+                <separator string="Grouper par"/>
+                <filter string="Statut" name="group_state" context="{'group_by': 'state'}"/>
+                <filter string="Dossier" name="group_order" context="{'group_by': 'order_id'}"/>
+                <filter string="Article" name="group_product" context="{'group_by': 'product_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_sav_magasin_part_line_list" model="ir.ui.view">
+        <field name="name">sav.magasin.part.line.list</field>
+        <field name="model">sav.magasin.part.line</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="availability_state == 'missing'" decoration-warning="availability_state == 'available_remote'" decoration-success="state in ['reserved', 'consumed']">
+                <field name="order_id"/>
+                <field name="product_id"/>
+                <field name="quantity"/>
+                <field name="state"/>
+                <field name="availability_state"/>
+                <field name="local_available_qty"/>
+                <field name="remote_available_qty"/>
+                <field name="source_warehouse_id"/>
+                <field name="stock_action_required"/>
+                <field name="stock_decision_note"/>
+                <button name="action_mark_reserved" type="object" string="Réserver" invisible="availability_state != 'available_local'"/>
+                <button name="action_request_transfer" type="object" string="Transfert" invisible="availability_state != 'available_remote'"/>
+                <button name="action_request_purchase" type="object" string="Commander" invisible="availability_state == 'available_local'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sav_magasin_part_line_form" model="ir.ui.view">
+        <field name="name">sav.magasin.part.line.form</field>
+        <field name="model">sav.magasin.part.line</field>
+        <field name="arch" type="xml">
+            <form string="Ligne composant batterie">
+                <header>
+                    <button name="action_check_stock" type="object" string="Vérifier stock"/>
+                    <button name="action_mark_reserved" type="object" string="Réserver" invisible="availability_state != 'available_local'" class="btn-primary"/>
+                    <button name="action_request_transfer" type="object" string="Demander transfert" invisible="availability_state != 'available_remote'" class="btn-primary"/>
+                    <button name="action_request_purchase" type="object" string="Prévoir commande" invisible="availability_state == 'available_local'"/>
+                    <button name="action_mark_consumed" type="object" string="Marquer consommée" invisible="state == 'consumed'"/>
+                    <button name="action_unreserve" type="object" string="Annuler réservation" invisible="not reserved_for_sav"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Dossier">
+                            <field name="order_id"/>
+                            <field name="product_id"/>
+                            <field name="name"/>
+                            <field name="quantity"/>
+                            <field name="price_unit"/>
+                            <field name="subtotal" readonly="1"/>
+                        </group>
+                        <group string="Décision stock" name="stock_decision_group">
+                            <field name="availability_state" readonly="1"/>
+                            <field name="stock_action_required" readonly="1"/>
+                            <field name="local_available_qty" readonly="1"/>
+                            <field name="remote_available_qty" readonly="1"/>
+                            <field name="total_available_qty" readonly="1"/>
+                            <field name="source_warehouse_id" readonly="1"/>
+                            <field name="reserved_for_sav"/>
+                            <field name="reserved_date" readonly="1"/>
+                            <field name="consumed_date" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="stock_decision_note" readonly="1"/>
+                        <field name="note"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sav_magasin_part_line" model="ir.actions.act_window">
+        <field name="name">Composants batterie</field>
+        <field name="res_model">sav.magasin.part.line</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_sav_magasin_part_line_purchase_needed" model="ir.actions.act_window">
+        <field name="name">Composants batterie à commander</field>
+        <field name="res_model">sav.magasin.part.line</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', '=', 'purchase_needed')]</field>
+    </record>
+
+    <record id="action_sav_magasin_part_line_transfer_requested" model="ir.actions.act_window">
+        <field name="name">Composants batterie à transférer</field>
+        <field name="res_model">sav.magasin.part.line</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', '=', 'transfer_requested')]</field>
+    </record>
+
+    <menuitem id="menu_sav_magasin_stock" name="Stock / Composants batterie" parent="sav_magasin_product.menu_sav_magasin_root" sequence="30"/>
+    <menuitem id="menu_sav_magasin_stock_part_lines" name="Toutes les composants batterie" parent="menu_sav_magasin_stock" action="action_sav_magasin_part_line" sequence="10"/>
+    <menuitem id="menu_sav_magasin_stock_transfer" name="Composants batterie à transférer" parent="menu_sav_magasin_stock" action="action_sav_magasin_part_line_transfer_requested" sequence="20"/>
+    <menuitem id="menu_sav_magasin_stock_purchase" name="Composants batterie à commander" parent="menu_sav_magasin_stock" action="action_sav_magasin_part_line_purchase_needed" sequence="30"/>
+</odoo>

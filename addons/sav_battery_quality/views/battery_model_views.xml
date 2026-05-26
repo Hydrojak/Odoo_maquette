@@ -1,0 +1,78 @@
+<odoo>
+    <record id="view_sav_battery_model_search" model="ir.ui.view">
+        <field name="name">sav.battery.model.search</field>
+        <field name="model">sav.battery.model</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="chemistry"/>
+                <field name="architecture"/>
+                <filter string="Compatible &lt; 60 V" name="under_60v" domain="[('is_under_60v', '=', True)]"/>
+                <filter string="Actif" name="active" domain="[('active', '=', True)]"/>
+                <separator string="Grouper par"/>
+                <filter string="Chimie" name="group_chemistry" context="{'group_by': 'chemistry'}"/>
+                <filter string="Architecture" name="group_architecture" context="{'group_by': 'architecture'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_sav_battery_model_list" model="ir.ui.view">
+        <field name="name">sav.battery.model.list</field>
+        <field name="model">sav.battery.model</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="not is_under_60v">
+                <field name="name"/>
+                <field name="nominal_voltage"/>
+                <field name="max_voltage"/>
+                <field name="capacity_ah"/>
+                <field name="chemistry"/>
+                <field name="architecture"/>
+                <field name="bms_type"/>
+                <field name="connector_type"/>
+                <field name="is_under_60v"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sav_battery_model_form" model="ir.ui.view">
+        <field name="name">sav.battery.model.form</field>
+        <field name="model">sav.battery.model</field>
+        <field name="arch" type="xml">
+            <form string="Modèle batterie">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Caractéristiques électriques">
+                            <field name="nominal_voltage"/>
+                            <field name="max_voltage"/>
+                            <field name="capacity_ah"/>
+                            <field name="chemistry"/>
+                            <field name="is_under_60v" readonly="1"/>
+                        </group>
+                        <group string="Architecture">
+                            <field name="series_count"/>
+                            <field name="parallel_count"/>
+                            <field name="architecture" readonly="1"/>
+                            <field name="bms_type"/>
+                            <field name="connector_type"/>
+                            <field name="charger_voltage"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="note" placeholder="Notice, seuils spécifiques, remarques atelier..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sav_battery_model" model="ir.actions.act_window">
+        <field name="name">Modèles batteries</field>
+        <field name="res_model">sav.battery.model</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_under_60v': 1}</field>
+    </record>
+</odoo>

@@ -1,0 +1,10 @@
+<odoo>
+    <record id="action_sav_magasin_repair_orders" model="ir.actions.act_window">
+        <field name="name">Ordres de réparation batterie Odoo</field>
+        <field name="res_model">repair.order</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_sav_magasin_repair_root" name="Réparations batterie Odoo" parent="sav_magasin_core.menu_sav_magasin_sav" sequence="30"/>
+    <menuitem id="menu_sav_magasin_repair_orders" name="Ordres de réparation" parent="menu_sav_magasin_repair_root" action="action_sav_magasin_repair_orders" sequence="10"/>
+</odoo>

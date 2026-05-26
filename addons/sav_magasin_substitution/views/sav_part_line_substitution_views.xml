@@ -1,0 +1,32 @@
+<odoo>
+    <record id="view_sav_magasin_sav_order_form_substitution" model="ir.ui.view">
+        <field name="name">sav.magasin.order.form.substitution</field>
+        <field name="model">sav.magasin.order</field>
+        <field name="inherit_id" ref="sav_magasin_core.view_sav_magasin_sav_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='part_line_ids']/list/field[@name='note']" position="after">
+                <field name="substitution_count" readonly="1"/>
+                <field name="suggested_substitute_product_id" readonly="1"/>
+                <field name="suggested_substitute_available_qty" readonly="1"/>
+                <field name="substitution_decision_note" readonly="1"/>
+                <button name="action_use_suggested_substitute" type="object" string="Utiliser substitut" invisible="not suggested_substitute_product_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sav_magasin_part_line_form_substitution" model="ir.ui.view">
+        <field name="name">sav.magasin.part.line.form.substitution</field>
+        <field name="model">sav.magasin.part.line</field>
+        <field name="inherit_id" ref="sav_magasin_stock.view_sav_magasin_part_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='stock_decision_group']" position="after">
+                <group string="Substitution" name="substitution_decision_group">
+                    <field name="substitution_count" readonly="1"/>
+                    <field name="suggested_substitute_product_id" readonly="1"/>
+                    <field name="suggested_substitute_available_qty" readonly="1"/>
+                    <field name="substitution_decision_note" readonly="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

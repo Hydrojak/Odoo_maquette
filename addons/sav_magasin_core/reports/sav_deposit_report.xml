@@ -1,0 +1,116 @@
+<odoo>
+    <record id="action_report_sav_magasin_sav_deposit" model="ir.actions.report">
+        <field name="name">Bon de dépôt batterie</field>
+        <field name="model">sav.magasin.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sav_magasin_core.report_sav_deposit</field>
+        <field name="report_file">sav_magasin_core.report_sav_deposit</field>
+        <field name="print_report_name">'Bon dépôt - %s' % (object.name)</field>
+    </record>
+
+    <record id="action_report_sav_magasin_sav_return" model="ir.actions.report">
+        <field name="name">Bon de restitution batterie</field>
+        <field name="model">sav.magasin.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sav_magasin_core.report_sav_return</field>
+        <field name="report_file">sav_magasin_core.report_sav_return</field>
+        <field name="print_report_name">'Bon restitution - %s' % (object.name)</field>
+    </record>
+
+    <template id="report_sav_deposit">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Bon de dépôt batterie</h2>
+                        <p><strong>Dossier :</strong> <span t-field="o.name"/> — <strong>Date dépôt :</strong> <span t-field="o.deposit_date"/></p>
+
+                        <table class="table table-sm o_main_table">
+                            <tr>
+                                <td style="width:50%; vertical-align:top;">
+                                    <h4>Client</h4>
+                                    <p><strong>Nom :</strong> <span t-field="o.partner_id"/></p>
+                                    <p><strong>Téléphone :</strong> <span t-field="o.client_phone"/></p>
+                                    <p><strong>Email :</strong> <span t-field="o.client_email"/></p>
+                                </td>
+                                <td style="width:50%; vertical-align:top;">
+                                    <h4>Batterie</h4>
+                                    <p><strong>Produit :</strong> <span t-field="o.device_name"/></p>
+                                    <p><strong>Marque :</strong> <span t-field="o.brand_id"/></p>
+                                    <p><strong>Modèle :</strong> <span t-field="o.model_id"/></p>
+                                    <p><strong>N° série :</strong> <span t-field="o.serial_number"/></p>
+                                    <p><strong>Garantie :</strong> <span t-field="o.warranty_state"/></p>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <h4>Déclaration au dépôt</h4>
+                        <p><strong>Symptôme déclaré :</strong></p>
+                        <p t-field="o.symptom"/>
+                        <p><strong>Accessoires déposés :</strong></p>
+                        <p t-field="o.accessories"/>
+                        <p><strong>État visuel :</strong></p>
+                        <p t-field="o.visual_state"/>
+
+                        <h4>Conditions de prise en charge</h4>
+                        <ul>
+                            <li>Le présent document atteste uniquement du dépôt du produit.</li>
+                            <li>Le diagnostic, le devis éventuel et la disponibilité des composants batterie restent à confirmer par l'atelier.</li>
+                            <li>Les accessoires non mentionnés sur ce bon ne pourront pas être réclamés lors de la restitution.</li>
+                        </ul>
+
+                        <table style="width:100%; margin-top:30px;">
+                            <tr>
+                                <td style="width:50%; padding-right:20px;">
+                                    <p><strong>Signature client :</strong></p>
+                                    <div style="height:90px;border:1px solid #999;"></div>
+                                </td>
+                                <td style="width:50%; padding-left:20px;">
+                                    <p><strong>Signature magasin :</strong></p>
+                                    <div style="height:90px;border:1px solid #999;"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_sav_return">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Bon de restitution batterie</h2>
+                        <p><strong>Dossier :</strong> <span t-field="o.name"/> — <strong>Date restitution :</strong> <span t-field="o.return_date"/></p>
+                        <p><strong>Client :</strong> <span t-field="o.partner_id"/></p>
+                        <p><strong>Batterie restituée :</strong> <span t-field="o.device_name"/></p>
+
+                        <h4>Travaux / décision atelier</h4>
+                        <p t-field="o.repair_note"/>
+
+                        <h4>Informations client</h4>
+                        <p t-field="o.customer_note"/>
+
+                        <h4>Montant estimé</h4>
+                        <p><strong>Composants batterie :</strong> <span t-field="o.amount_parts"/> — <strong>Main-d'œuvre :</strong> <span t-field="o.amount_labor"/> — <strong>Total :</strong> <span t-field="o.amount_total"/></p>
+
+                        <table style="width:100%; margin-top:30px;">
+                            <tr>
+                                <td style="width:50%; padding-right:20px;">
+                                    <p><strong>Signature client :</strong></p>
+                                    <div style="height:90px;border:1px solid #999;"></div>
+                                </td>
+                                <td style="width:50%; padding-left:20px;">
+                                    <p><strong>Signature magasin :</strong></p>
+                                    <div style="height:90px;border:1px solid #999;"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,19 @@
+<odoo>
+    <record id="view_partner_form_sav_magasin" model="ir.ui.view">
+        <field name="name">res.partner.form.sav_magasin</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Informations atelier batterie">
+                    <field name="sav_magasin_customer_type"/>
+                    <field name="sav_magasin_has_minimum_contact" readonly="1"/>
+                    <field name="sav_magasin_duplicate_score" readonly="1"/>
+                    <field name="sav_magasin_billing_partner_id"/>
+                    <field name="sav_magasin_delivery_partner_id"/>
+                    <field name="sav_magasin_internal_note"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

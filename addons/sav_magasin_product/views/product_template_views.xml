@@ -1,0 +1,33 @@
+<odoo>
+    <record id="view_product_template_form_sav_magasin" model="ir.ui.view">
+        <field name="name">product.template.form.sav_magasin</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="sav_magasin_completeness_state" readonly="1"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Re-Watt ERP">
+                    <group string="Classification métier">
+                        <field name="sav_magasin_brand_id"/>
+                        <field name="sav_magasin_range_id"/>
+                        <field name="sav_magasin_model_id"/>
+                        <field name="sav_magasin_article_type_id"/>
+                    </group>
+                    <group string="Références">
+                        <field name="sav_magasin_supplier_reference"/>
+                        <field name="sav_magasin_manufacturer_reference"/>
+                        <field name="sav_magasin_location_hint"/>
+                    </group>
+                    <group string="Équivalences">
+                        <field name="sav_magasin_equivalent_product_ids" widget="many2many_tags"/>
+                    </group>
+                    <group string="Notes métier">
+                        <field name="sav_magasin_notes"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

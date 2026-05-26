@@ -1,0 +1,24 @@
+<odoo>
+    <record id="view_sav_magasin_order_form_repair" model="ir.ui.view">
+        <field name="name">sav.magasin.order.form.repair.integration</field>
+        <field name="model">sav.magasin.order</field>
+        <field name="inherit_id" ref="sav_magasin_core.view_sav_magasin_sav_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_start_repair']" position="before">
+                <button name="action_create_repair_order" type="object" string="Créer ordre réparation" invisible="repair_order_id or state not in ['diagnosis', 'part_wait', 'repair']"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_repair_order" type="object" class="oe_stat_button" icon="fa-wrench" invisible="not repair_order_id">
+                    <field name="repair_order_count" widget="statinfo" string="Réparation"/>
+                </button>
+            </xpath>
+            <xpath expr="//page[@name='page_diagnosis_repair']/group[1]" position="before">
+                <group string="Ordre de réparation batterie Odoo">
+                    <field name="device_product_id"/>
+                    <field name="repair_order_id" readonly="1"/>
+                    <field name="repair_state" readonly="1" invisible="not repair_order_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

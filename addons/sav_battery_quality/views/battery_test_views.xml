@@ -1,0 +1,147 @@
+<odoo>
+    <record id="view_sav_battery_test_session_search" model="ir.ui.view">
+        <field name="name">sav.battery.test.session.search</field>
+        <field name="model">sav.battery.test.session</field>
+        <field name="arch" type="xml">
+            <search string="Tests batterie">
+                <field name="name"/>
+                <field name="repair_id"/>
+                <field name="operator_id"/>
+                <filter string="En cours" name="running" domain="[('state','=','running')]"/>
+                <filter string="Validés" name="validated" domain="[('state','=','validated')]"/>
+                <filter string="Non conformes" name="failed" domain="[('result','=','fail')]"/>
+                <separator string="Grouper par"/>
+                <group>
+                    <filter string="Type de test" name="group_test_type" context="{'group_by':'test_type'}"/>
+                    <filter string="État" name="group_state" context="{'group_by':'state'}"/>
+                    <filter string="Résultat" name="group_result" context="{'group_by':'result'}"/>
+                    <filter string="Opérateur" name="group_operator" context="{'group_by':'operator_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_sav_battery_test_session_list" model="ir.ui.view">
+        <field name="name">sav.battery.test.session.list</field>
+        <field name="model">sav.battery.test.session</field>
+        <field name="arch" type="xml">
+            <list decoration-success="result == 'pass'" decoration-danger="result == 'fail'" decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="repair_id"/>
+                <field name="test_type"/>
+                <field name="state"/>
+                <field name="result"/>
+                <field name="operator_id"/>
+                <field name="start_datetime"/>
+                <field name="duration"/>
+                <field name="measurement_count"/>
+                <field name="fail_measurement_count"/>
+                <field name="temperature_max"/>
+                <field name="cell_delta_v"/>
+                <field name="capacity_ah"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sav_battery_test_session_form" model="ir.ui.view">
+        <field name="name">sav.battery.test.session.form</field>
+        <field name="model">sav.battery.test.session</field>
+        <field name="arch" type="xml">
+            <form string="Session de test batterie">
+                <header>
+                    <button name="action_start" string="Démarrer" type="object" class="btn-primary" invisible="state not in ['draft']"/>
+                    <button name="action_done" string="Terminer" type="object" class="btn-primary" invisible="state not in ['draft','running']"/>
+                    <button name="action_validate" string="Valider" type="object" class="btn-primary" invisible="state not in ['done']"/>
+                    <button name="action_reopen" string="Réouvrir" type="object" invisible="state not in ['validated','cancelled']"/>
+                    <button name="action_cancel" string="Annuler" type="object" invisible="state in ['validated','cancelled']"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,running,done,validated"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Session">
+                            <field name="repair_id"/>
+                            <field name="checklist_id"/>
+                            <field name="test_type"/>
+                            <field name="operator_id"/>
+                        </group>
+                        <group string="Temps / résultat">
+                            <field name="start_datetime"/>
+                            <field name="end_datetime"/>
+                            <field name="duration" readonly="1"/>
+                            <field name="result" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Synthèse mesures">
+                            <field name="measurement_count" readonly="1"/>
+                            <field name="fail_measurement_count" readonly="1"/>
+                            <field name="voltage_start" readonly="1"/>
+                            <field name="voltage_end" readonly="1"/>
+                            <field name="current_a" readonly="1"/>
+                            <field name="capacity_ah" readonly="1"/>
+                            <field name="temperature_max" readonly="1"/>
+                            <field name="cell_delta_v" readonly="1"/>
+                        </group>
+                        <group string="Validation">
+                            <field name="validation_message" readonly="1" nolabel="1"/>
+                            <field name="note"/>
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="page_measurements" string="Mesures">
+                            <field name="measurement_ids">
+                                <list editable="bottom" decoration-danger="result == 'fail'" decoration-success="result == 'pass'">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="measured_at"/>
+                                    <field name="name"/>
+                                    <field name="voltage_start"/>
+                                    <field name="voltage_end"/>
+                                    <field name="current_a"/>
+                                    <field name="capacity_ah"/>
+                                    <field name="temperature_c"/>
+                                    <field name="cell_delta_v"/>
+                                    <field name="result" readonly="1"/>
+                                    <field name="out_of_range_reason" readonly="1"/>
+                                    <field name="comment"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="page_thresholds" string="Seuils / preuves">
+                            <field name="measurement_ids">
+                                <list editable="bottom" decoration-danger="result == 'fail'" decoration-success="result == 'pass'">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="max_voltage_limit"/>
+                                    <field name="max_temperature_c"/>
+                                    <field name="max_cell_delta_v"/>
+                                    <field name="min_capacity_ah"/>
+                                    <field name="attachment_ids" widget="many2many_binary"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sav_battery_test_session" model="ir.actions.act_window">
+        <field name="name">Tests charge/décharge</field>
+        <field name="res_model">sav.battery.test.session</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_sav_battery_test_session_search"/>
+    </record>
+
+    <record id="action_sav_battery_test_session_failed" model="ir.actions.act_window">
+        <field name="name">Tests non conformes</field>
+        <field name="res_model">sav.battery.test.session</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('result','=','fail'), ('state','!=','cancelled')]</field>
+        <field name="search_view_id" ref="view_sav_battery_test_session_search"/>
+    </record>
+</odoo>

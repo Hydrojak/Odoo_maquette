@@ -1,0 +1,113 @@
+<odoo>
+    <record id="view_purchase_order_form_sav_magasin" model="ir.ui.view">
+        <field name="name">purchase.order.form.sav.magasin</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Re-Watt ERP" invisible="not sav_order_id">
+                    <field name="sav_order_id" readonly="1"/>
+                    <field name="sav_part_line_count" readonly="1"/>
+                    <button name="action_open_sav_order" type="object" string="Ouvrir dossier batterie" class="btn-secondary" invisible="not sav_order_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sav_magasin_sav_order_form_purchase" model="ir.ui.view">
+        <field name="name">sav.magasin.order.form.purchase</field>
+        <field name="model">sav.magasin.order</field>
+        <field name="inherit_id" ref="sav_magasin_core.view_sav_magasin_sav_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_purchase_orders" type="object" class="oe_stat_button" icon="fa-truck" invisible="purchase_order_count == 0">
+                    <field name="purchase_order_count" widget="statinfo" string="Achats"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='next_action']" position="after">
+                <field name="purchase_attention" readonly="1" invisible="not purchase_attention"/>
+            </xpath>
+            <xpath expr="//page[@name='page_commercial']/group" position="inside">
+                <field name="purchase_order_count" readonly="1"/>
+                <field name="purchase_to_receive_count" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sav_magasin_part_line_list_purchase" model="ir.ui.view">
+        <field name="name">sav.magasin.part.line.list.purchase</field>
+        <field name="model">sav.magasin.part.line</field>
+        <field name="inherit_id" ref="sav_magasin_stock.view_sav_magasin_part_line_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stock_decision_note']" position="after">
+                <field name="vendor_id"/>
+                <field name="purchase_order_id" readonly="1"/>
+                <field name="purchase_state" readonly="1"/>
+            </xpath>
+            <xpath expr="//button[@name='action_request_purchase']" position="after">
+                <button name="action_create_purchase_order" type="object" string="Créer achat" invisible="state not in ['purchase_needed', 'to_check']"/>
+                <button name="action_open_purchase_order" type="object" string="Voir achat" invisible="not purchase_order_id"/>
+                <button name="action_mark_received" type="object" string="Marquer reçue" invisible="state != 'purchase_ordered'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sav_magasin_part_line_form_purchase" model="ir.ui.view">
+        <field name="name">sav.magasin.part.line.form.purchase</field>
+        <field name="model">sav.magasin.part.line</field>
+        <field name="inherit_id" ref="sav_magasin_stock.view_sav_magasin_part_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_request_purchase']" position="after">
+                <button name="action_create_purchase_order" type="object" string="Créer commande fournisseur" invisible="state not in ['purchase_needed', 'to_check']" class="btn-primary"/>
+                <button name="action_open_purchase_order" type="object" string="Ouvrir commande" invisible="not purchase_order_id"/>
+                <button name="action_mark_received" type="object" string="Marquer reçue" invisible="state != 'purchase_ordered'"/>
+            </xpath>
+            <xpath expr="//group[@name='stock_decision_group']" position="after">
+                <group string="Achat fournisseur">
+                    <field name="vendor_id"/>
+                    <field name="expected_receipt_date"/>
+                    <field name="purchase_order_id" readonly="1"/>
+                    <field name="purchase_order_line_id" readonly="1"/>
+                    <field name="purchase_state" readonly="1"/>
+                    <field name="purchase_created_date" readonly="1"/>
+                    <field name="purchase_note"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sav_magasin_part_line_search_purchase" model="ir.ui.view">
+        <field name="name">sav.magasin.part.line.search.purchase</field>
+        <field name="model">sav.magasin.part.line</field>
+        <field name="inherit_id" ref="sav_magasin_stock.view_sav_magasin_part_line_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='purchase_needed']" position="after">
+                <filter string="Commande créée" name="purchase_ordered" domain="[('state', '=', 'purchase_ordered')]"/>
+                <filter string="Reçues" name="received" domain="[('state', '=', 'received')]"/>
+                <filter string="Avec achat" name="with_purchase" domain="[('purchase_order_id', '!=', False)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_sav_magasin_purchase_order" model="ir.actions.act_window">
+        <field name="name">Commandes fournisseur batterie</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('sav_order_id', '!=', False)]</field>
+        <field name="context">{'search_default_draft': 1}</field>
+    </record>
+
+    <record id="action_sav_magasin_part_line_purchase_ordered" model="ir.actions.act_window">
+        <field name="name">Composants batterie commandées</field>
+        <field name="res_model">sav.magasin.part.line</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', '=', 'purchase_ordered')]</field>
+    </record>
+
+    <record id="action_sav_magasin_part_line_received" model="ir.actions.act_window">
+        <field name="name">Composants batterie reçues</field>
+        <field name="res_model">sav.magasin.part.line</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', '=', 'received')]</field>
+    </record>
+</odoo>

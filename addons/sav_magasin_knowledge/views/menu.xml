@@ -1,0 +1,5 @@
+<odoo>
+    <menuitem id="menu_sav_magasin_knowledge_root" name="Knowledge métier" parent="sav_magasin_product.menu_sav_magasin_root" sequence="65"/>
+    <menuitem id="menu_sav_magasin_procedures" name="Procédures" parent="menu_sav_magasin_knowledge_root" action="action_sav_magasin_procedures" sequence="10"/>
+    <menuitem id="menu_sav_magasin_faq" name="FAQ" parent="menu_sav_magasin_knowledge_root" action="action_sav_magasin_faq" sequence="20"/>
+</odoo>

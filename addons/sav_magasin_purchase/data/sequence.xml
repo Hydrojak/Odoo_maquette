@@ -1,0 +1,9 @@
+<odoo>
+    <record id="seq_sav_magasin_quick_receipt" model="ir.sequence">
+        <field name="name">Réception sans commande Re-Watt ERP</field>
+        <field name="code">sav.magasin.quick.receipt</field>
+        <field name="prefix">REC%(y)s</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

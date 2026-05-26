@@ -1,0 +1,183 @@
+<odoo>
+    <record id="view_sav_magasin_order_search_battery" model="ir.ui.view">
+        <field name="name">sav.magasin.order.search.battery</field>
+        <field name="model">sav.magasin.order</field>
+        <field name="inherit_id" ref="sav_magasin_core.view_sav_magasin_sav_order_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='serial_number']" position="after">
+                <field name="battery_model_id"/>
+                <field name="battery_serial"/>
+            </xpath>
+            <xpath expr="//filter[@name='open']" position="after">
+                <filter string="Dossiers batterie" name="battery_files" domain="[('is_battery_repair', '=', True)]"/>
+                <filter string="Compatible &lt; 60 V" name="battery_under_60" domain="[('is_under_60v', '=', True)]"/>
+                <filter string="Batteries bloquées" name="battery_blocked" domain="[('battery_stage', '=', 'blocked')]"/>
+                <filter string="Diagnostics critiques ouverts" name="battery_critical_diag" domain="[('battery_open_critical_diagnostic_count', '&gt;', 0)]"/>
+            </xpath>
+            <xpath expr="//filter[@name='group_technician']" position="after">
+                <filter string="Étape batterie" name="group_battery_stage" context="{'group_by': 'battery_stage'}"/>
+                <filter string="Modèle batterie" name="group_battery_model" context="{'group_by': 'battery_model_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sav_magasin_order_list_battery" model="ir.ui.view">
+        <field name="name">sav.magasin.order.list.battery</field>
+        <field name="model">sav.magasin.order</field>
+        <field name="inherit_id" ref="sav_magasin_core.view_sav_magasin_sav_order_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='device_name']" position="after">
+                <field name="battery_model_id"/>
+                <field name="battery_max_voltage"/>
+                <field name="is_under_60v"/>
+                <field name="battery_stage"/>
+                <field name="battery_open_diagnostic_count"/>
+                <field name="battery_open_critical_diagnostic_count"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sav_magasin_order_form_battery" model="ir.ui.view">
+        <field name="name">sav.magasin.order.form.battery</field>
+        <field name="model">sav.magasin.order</field>
+        <field name="inherit_id" ref="sav_magasin_core.view_sav_magasin_sav_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="string">Dossier batterie</attribute>
+            </xpath>
+            <xpath expr="//header/field[@name='state']" position="before">
+                <button name="action_battery_quarantine" type="object" string="Quarantaine" invisible="state in ['closed', 'cancelled', 'blocked']"/>
+                <button name="action_battery_assembly" type="object" string="Assemblage" class="btn-primary" invisible="state not in ['diagnosis', 'repair', 'received', 'quarantine']"/>
+                <button name="action_battery_testing" type="object" string="Tests charge/décharge" class="btn-primary" invisible="state not in ['assembly', 'repair']"/>
+                <button name="action_battery_quality_check" type="object" string="Contrôle qualité" class="btn-primary" invisible="state != 'testing'"/>
+                <button name="action_battery_validated" type="object" string="Valider batterie" class="btn-primary" invisible="state != 'quality_check'"/>
+                <button name="action_battery_delivered" type="object" string="Livrer batterie" invisible="state != 'validated'"/>
+                <button name="action_battery_blocked" type="object" string="Bloquer batterie" invisible="state in ['closed', 'cancelled', 'blocked']"/>
+                <button name="action_create_battery_checklist" type="object" string="Créer checklist" invisible="not is_battery_repair"/>
+                <button name="action_create_battery_test_session" type="object" string="Créer test batterie" invisible="not is_battery_repair"/>
+                <button name="action_print_battery_technician_report" type="object" string="Rapport technicien batterie"/>
+            </xpath>
+            <xpath expr="//header/field[@name='state']" position="attributes">
+                <attribute name="statusbar_visible">draft,new,diagnosis,assembly,testing,quality_check,validated,delivered,closed</attribute>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_battery_checklists" type="object" class="oe_stat_button" icon="fa-check-square-o" invisible="not is_battery_repair">
+                    <field name="battery_checklist_count" widget="statinfo" string="Checklists"/>
+                </button>
+                <button name="action_open_battery_diagnostics" type="object" class="oe_stat_button" icon="fa-exclamation-triangle" invisible="not is_battery_repair">
+                    <field name="battery_open_diagnostic_count" widget="statinfo" string="Diagnostics ouverts"/>
+                </button>
+                <button name="action_open_battery_test_sessions" type="object" class="oe_stat_button" icon="fa-bolt" invisible="not is_battery_repair">
+                    <field name="battery_test_session_count" widget="statinfo" string="Tests batterie"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='blocking_reason']" position="after">
+                <field name="battery_blocking_reason" readonly="1" invisible="not battery_blocking_reason" class="text-danger"/>
+            </xpath>
+            <xpath expr="//h3/field[@name='device_name']" position="attributes">
+                <attribute name="placeholder">Batterie / pack batterie</attribute>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page name="page_battery_quality" string="Batterie &lt; 60 V">
+                    <group>
+                        <group string="Identification batterie">
+                            <field name="is_battery_repair"/>
+                            <field name="battery_model_id"/>
+                            <field name="battery_serial"/>
+                            <field name="battery_stage"/>
+                            <field name="battery_notice_version"/>
+                            <field name="battery_quality_responsible_id"/>
+                        </group>
+                        <group string="Conformité électrique">
+                            <field name="battery_nominal_voltage"/>
+                            <field name="battery_max_voltage"/>
+                            <field name="is_under_60v" readonly="1"/>
+                            <field name="battery_capacity_ah"/>
+                            <field name="battery_chemistry"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Architecture pack">
+                            <field name="battery_series_count"/>
+                            <field name="battery_parallel_count"/>
+                            <field name="battery_architecture" readonly="1"/>
+                            <field name="bms_type"/>
+                        </group>
+                        <group string="Connectique / charge">
+                            <field name="connector_type"/>
+                            <field name="charger_voltage"/>
+                            <field name="battery_blocking_reason" readonly="1"/>
+                            <field name="has_validated_battery_checklist" readonly="1"/>
+                            <field name="battery_open_blocking_fail_count" readonly="1"/>
+                            <field name="battery_open_diagnostic_count" readonly="1"/>
+                            <field name="battery_open_critical_diagnostic_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <field name="battery_checklist_ids" readonly="1">
+                        <list>
+                            <field name="name"/>
+                            <field name="state"/>
+                            <field name="operator_id"/>
+                            <field name="completion_rate"/>
+                            <field name="fail_count"/>
+                            <field name="blocking_fail_count"/>
+                            <field name="open_diagnostic_count"/>
+                            <field name="open_critical_diagnostic_count"/>
+                        </list>
+                    </field>
+                    <separator string="Diagnostics / non-conformités"/>
+                    <field name="battery_diagnostic_ids" readonly="1">
+                        <list decoration-danger="is_critical_open" decoration-warning="state in ['open', 'in_progress']" decoration-success="state in ['resolved', 'closed']">
+                            <field name="name"/>
+                            <field name="severity"/>
+                            <field name="cause"/>
+                            <field name="state"/>
+                            <field name="responsible_id"/>
+                            <field name="date_opened"/>
+                            <field name="date_closed"/>
+                        </list>
+                    </field>
+                    <separator string="Tests charge / décharge"/>
+                    <group>
+                        <group string="Synthèse tests">
+                            <field name="battery_test_session_count" readonly="1"/>
+                            <field name="battery_validated_test_count" readonly="1"/>
+                            <field name="battery_failed_test_count" readonly="1"/>
+                            <field name="battery_last_test_result" readonly="1"/>
+                        </group>
+                    </group>
+                    <field name="battery_test_session_ids" readonly="1">
+                        <list decoration-danger="result == 'fail'" decoration-success="result == 'pass'">
+                            <field name="name"/>
+                            <field name="test_type"/>
+                            <field name="state"/>
+                            <field name="result"/>
+                            <field name="operator_id"/>
+                            <field name="start_datetime"/>
+                            <field name="duration"/>
+                            <field name="temperature_max"/>
+                            <field name="cell_delta_v"/>
+                            <field name="capacity_ah"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_rewatt_battery_orders" model="ir.actions.act_window">
+        <field name="name">Dossiers batteries</field>
+        <field name="res_model">sav.magasin.order</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('is_battery_repair', '=', True)]</field>
+        <field name="context">{'default_is_battery_repair': True, 'search_default_battery_files': 1}</field>
+    </record>
+
+    <record id="action_rewatt_battery_blocked" model="ir.actions.act_window">
+        <field name="name">Batteries bloquées</field>
+        <field name="res_model">sav.magasin.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_battery_repair', '=', True), ('battery_stage', '=', 'blocked')]</field>
+        <field name="context">{'default_is_battery_repair': True}</field>
+    </record>
+</odoo>

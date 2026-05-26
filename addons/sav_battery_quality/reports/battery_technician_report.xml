@@ -1,0 +1,213 @@
+<odoo>
+    <record id="action_report_battery_technician" model="ir.actions.report">
+        <field name="name">Rapport technicien batterie</field>
+        <field name="model">sav.magasin.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sav_battery_quality.report_battery_technician</field>
+        <field name="report_file">sav_battery_quality.report_battery_technician</field>
+        <field name="print_report_name">'Rapport technicien batterie - %s' % (object.name)</field>
+    </record>
+
+    <template id="report_battery_technician">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Rapport technicien batterie</h2>
+                        <t t-if="not o.has_validated_battery_checklist">
+                            <div style="border: 2px solid #999; padding: 8px; margin-bottom: 10px; text-align: center; font-size: 18px;">
+                                BROUILLON NON VALIDÉ — aucune checklist validée/verrouillée
+                            </div>
+                        </t>
+                        <p><strong>Dossier :</strong> <span t-field="o.name"/> — <strong>Client :</strong> <span t-field="o.partner_id"/></p>
+
+                        <h3>Identification batterie</h3>
+                        <table class="table table-sm o_main_table">
+                            <tbody>
+                                <tr>
+                                    <td><strong>Modèle batterie</strong></td>
+                                    <td><span t-field="o.battery_model_id"/></td>
+                                    <td><strong>N° série</strong></td>
+                                    <td><span t-field="o.battery_serial"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Tension nominale</strong></td>
+                                    <td><span t-field="o.battery_nominal_voltage"/> V</td>
+                                    <td><strong>Tension maximale</strong></td>
+                                    <td><span t-field="o.battery_max_voltage"/> V</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Capacité</strong></td>
+                                    <td><span t-field="o.battery_capacity_ah"/> Ah</td>
+                                    <td><strong>Chimie</strong></td>
+                                    <td><span t-field="o.battery_chemistry"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Architecture</strong></td>
+                                    <td><span t-field="o.battery_architecture"/></td>
+                                    <td><strong>BMS</strong></td>
+                                    <td><span t-field="o.bms_type"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Compatible &lt; 60 V</strong></td>
+                                    <td><span t-field="o.is_under_60v"/></td>
+                                    <td><strong>Étape batterie</strong></td>
+                                    <td><span t-field="o.battery_stage"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Synthèse technique</h3>
+                        <p><strong>Diagnostic :</strong></p>
+                        <p t-field="o.diagnosis"/>
+                        <p><strong>Compte-rendu réparation :</strong></p>
+                        <p t-field="o.repair_note"/>
+
+                        <h3>Checklists qualité</h3>
+                        <t t-if="not o.battery_checklist_ids">
+                            <p>Aucune checklist batterie n’est encore rattachée à ce dossier.</p>
+                        </t>
+                        <t t-foreach="o.battery_checklist_ids" t-as="checklist">
+                            <h4><span t-field="checklist.name"/> — <span t-field="checklist.state"/></h4>
+                            <p>
+                                Progression : <span t-field="checklist.completion_rate"/> %
+                                | Obligatoires : <span t-field="checklist.completed_required_count"/> / <span t-field="checklist.required_count"/>
+                                | Conformes : <span t-field="checklist.pass_count"/>
+                                | Non conformes : <span t-field="checklist.fail_count"/>
+                                | N/A : <span t-field="checklist.na_count"/>
+                                | Bloquantes : <span t-field="checklist.blocking_fail_count"/>
+                                | Diagnostics ouverts : <span t-field="checklist.open_diagnostic_count"/>
+                                | Diagnostics critiques ouverts : <span t-field="checklist.open_critical_diagnostic_count"/>
+                            </p>
+                            <table class="table table-sm o_main_table">
+                                <thead>
+                                    <tr>
+                                        <th>Phase</th>
+                                        <th>Contrôle</th>
+                                        <th>Critère attendu</th>
+                                        <th>Valeur</th>
+                                        <th>Unité</th>
+                                        <th>Verdict</th>
+                                        <th>Commentaire</th>
+                                        <th>Complété</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="checklist.line_ids" t-as="line">
+                                        <tr>
+                                            <td><span t-field="line.phase"/></td>
+                                            <td><span t-field="line.name"/></td>
+                                            <td><span t-field="line.expected_criteria"/></td>
+                                            <td><span t-field="line.measured_value"/></td>
+                                            <td><span t-field="line.unit"/></td>
+                                            <td><span t-field="line.verdict"/></td>
+                                            <td><span t-field="line.comment"/></td>
+                                            <td><span t-field="line.is_complete"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+
+
+
+                        <h3>Tests charge/décharge</h3>
+                        <t t-if="not o.battery_test_session_ids">
+                            <p>Aucune session de test batterie n’est encore rattachée à ce dossier.</p>
+                        </t>
+                        <t t-if="o.battery_test_session_ids">
+                            <table class="table table-sm o_main_table">
+                                <thead>
+                                    <tr>
+                                        <th>Référence</th>
+                                        <th>Type</th>
+                                        <th>État</th>
+                                        <th>Résultat</th>
+                                        <th>Durée</th>
+                                        <th>Tension départ</th>
+                                        <th>Tension fin</th>
+                                        <th>Courant max</th>
+                                        <th>Capacité</th>
+                                        <th>Temp. BMS</th>
+                                        <th>Delta cellules</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.battery_test_session_ids" t-as="session">
+                                        <tr>
+                                            <td><span t-field="session.name"/></td>
+                                            <td><span t-field="session.test_type"/></td>
+                                            <td><span t-field="session.state"/></td>
+                                            <td><span t-field="session.result"/></td>
+                                            <td><span t-field="session.duration"/> h</td>
+                                            <td><span t-field="session.voltage_start"/> V</td>
+                                            <td><span t-field="session.voltage_end"/> V</td>
+                                            <td><span t-field="session.current_a"/> A</td>
+                                            <td><span t-field="session.capacity_ah"/> Ah</td>
+                                            <td><span t-field="session.temperature_max"/> °C</td>
+                                            <td><span t-field="session.cell_delta_v"/> V</td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <h3>Diagnostics et non-conformités</h3>
+                        <t t-if="not o.battery_diagnostic_ids">
+                            <p>Aucun diagnostic batterie n’est rattaché à ce dossier.</p>
+                        </t>
+                        <t t-if="o.battery_diagnostic_ids">
+                            <table class="table table-sm o_main_table">
+                                <thead>
+                                    <tr>
+                                        <th>Référence</th>
+                                        <th>Gravité</th>
+                                        <th>Cause</th>
+                                        <th>État</th>
+                                        <th>Contrôle</th>
+                                        <th>Description</th>
+                                        <th>Action corrective</th>
+                                        <th>Responsable</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.battery_diagnostic_ids" t-as="diagnostic">
+                                        <tr>
+                                            <td><span t-field="diagnostic.name"/></td>
+                                            <td><span t-field="diagnostic.severity"/></td>
+                                            <td><span t-field="diagnostic.cause"/></td>
+                                            <td><span t-field="diagnostic.state"/></td>
+                                            <td><span t-field="diagnostic.checklist_line_id"/></td>
+                                            <td><span t-field="diagnostic.description"/></td>
+                                            <td><span t-field="diagnostic.corrective_action"/></td>
+                                            <td><span t-field="diagnostic.responsible_id"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <h3>Validation</h3>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <td><strong>Technicien</strong></td>
+                                    <td><span t-field="o.technician_id"/></td>
+                                    <td><strong>Responsable qualité</strong></td>
+                                    <td><span t-field="o.battery_quality_responsible_id"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Date dépôt</strong></td>
+                                    <td><span t-field="o.deposit_date"/></td>
+                                    <td><strong>Date clôture</strong></td>
+                                    <td><span t-field="o.closed_date"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p><em>Rapport v1.1.0 : la version finale doit être utilisée uniquement avec une checklist validée ou verrouillée. Les rapports sans checklist validée sont explicitement marqués comme brouillon.</em></p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

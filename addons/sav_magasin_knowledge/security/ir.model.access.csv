@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sav_magasin_procedure_user,sav.magasin.procedure.user,model_sav_magasin_procedure,base.group_user,1,1,1,0
+access_sav_magasin_procedure_step_user,sav.magasin.procedure.step.user,model_sav_magasin_procedure_step,base.group_user,1,1,1,0
+access_sav_magasin_faq_user,sav.magasin.faq.user,model_sav_magasin_faq,base.group_user,1,1,1,0

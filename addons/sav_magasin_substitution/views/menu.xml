@@ -1,0 +1,3 @@
+<odoo>
+    <menuitem id="menu_sav_magasin_substitution" name="Substitutions articles" parent="sav_magasin_product.menu_sav_magasin_referential" action="action_sav_magasin_product_substitution" sequence="50"/>
+</odoo>
